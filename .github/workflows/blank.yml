@@ -1,0 +1,27 @@
+on:
+  push:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - run: dotnet restore
+    - run: dotnet pack -c Release /p:assemblyVersion=1.0.$GITHUB_RUN_NUMBER /p:version=1.0.$GITHUB_RUN_NUMBER /p:RepositoryUrl=${{github.server_url}}/${{github.repository}}
+    - run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/ddrinka/GitHubQueryTest/index.json
+
+  query:
+    needs: build
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        q: [ShortTest, Short, Long.Long.Long.Long.Long.Long.Test, Long]
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: curl "https://nuget.pkg.github.com/ddrinka/query?q=${{ matrix.q }}&prerelease=false&semVerLevel=2.0.0" -u token:${{ secrets.GITHUB_TOKEN }} | jq .

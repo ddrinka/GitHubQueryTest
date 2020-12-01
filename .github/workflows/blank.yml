@@ -12,7 +12,7 @@ jobs:
         dotnet-version: 5.0.x
     - run: dotnet restore
     - run: dotnet pack -c Release /p:assemblyVersion=1.0.$GITHUB_RUN_NUMBER /p:version=1.0.$GITHUB_RUN_NUMBER /p:RepositoryUrl=${{github.server_url}}/${{github.repository}}
-    - run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/ddrinka/GitHubQueryTest/index.json
+    - run: dotnet nuget push **/*.nupkg --skip-duplicate --source https://nuget.pkg.github.com/ddrinka/GitHubQueryTest/index.json -k ${{ secrets.GITHUB_TOKEN }}
 
   query:
     needs: build
@@ -24,4 +24,4 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: curl "https://nuget.pkg.github.com/ddrinka/query?q=${{ matrix.q }}&prerelease=false&semVerLevel=2.0.0" -u token:${{ secrets.GITHUB_TOKEN }} | jq .
+      - run: curl "https://nuget.pkg.github.com/ddrinka/GitHubQueryTest/query?q=${{ matrix.q }}&prerelease=false&semVerLevel=2.0.0" -u token:${{ secrets.GITHUB_TOKEN }} | jq .

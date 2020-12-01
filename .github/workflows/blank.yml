@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        q: [ShortTest, Short, Long.Long.Long.Long.Long.Long.Test, Long]
+        q: [ShortTest, Short, Long.Long.Long.Long.Long.Long.Test, Long, Long.Long.Long.Long.L]
 
     steps:
       - uses: actions/checkout@v2

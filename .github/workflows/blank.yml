@@ -11,6 +11,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
         source-url: https://nuget.pkg.github.com/ddrinka/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
     - run: dotnet restore
     - run: dotnet pack -c Release /p:assemblyVersion=1.0.$GITHUB_RUN_NUMBER /p:version=1.0.$GITHUB_RUN_NUMBER /p:RepositoryUrl=${{github.server_url}}/${{github.repository}}
     - run: dotnet nuget push **/*.nupkg --skip-duplicate
